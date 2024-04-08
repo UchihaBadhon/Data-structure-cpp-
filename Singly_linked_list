@@ -41,6 +41,53 @@ temp->next=temp1->next;//update the address of new node
 temp1->next=temp;//connect the new node address at the fixed position node
 
 }
+void del_beg(node* &head){
+node *temp=head;
+temp->next==NULL;
+head=head->next;
+    free(temp);
+temp=NULL;
+}
+void del_end(node* &head,node* &tail){
+node *temp=head;
+if(temp->next==NULL){
+    free(temp);
+    temp=NULL;
+return;
+}
+while(temp->next->next!=NULL){
+    temp=temp->next;
+}
+temp->next=NULL;
+free(tail);
+tail=NULL;
+tail=temp;
+}
+void del_position(node* &head,node* &tail,int pos){
+node *temp=head;
+int position =1;
+
+while(position<pos-1){
+    temp=temp->next;
+position++;
+}
+//if the position of node is at the begining
+if(temp==head){
+  del_beg(head);
+  return;
+}
+//if node position is in last
+if(temp->next==NULL){
+    del_end(head,tail);
+    return;
+}
+else{
+    node *temp2=temp->next;
+    temp->next=temp2->next;
+    free(temp2);
+    temp2=NULL;
+}
+}
 void print(node *head){
 node *temp=head;
 while(temp!=NULL){
@@ -57,9 +104,18 @@ node *tail=newnode;//to keep track of the last node
 //insertion
 insert_at_beg(head,20);
 insert_at_end(tail,30);
+insert_at_end(tail,60);
 insert_at_position(head,tail,4,40);
 print(head);
 cout<<"Head: "<<head->data<<endl;
 cout<<"Tail: "<<tail->data<<endl;
-//cout<<newnode->data<<" "<<newnode->next<<endl;
+del_beg(head);
+cout<<"delete successfully at begin"<<endl;
+print(head);
+del_end(head,tail);
+cout<<"delete successfully at end"<<endl;
+print(head);
+del_position(head,tail,5);
+cout<<"delete successfully at position"<<endl;
+print(head);
 }
