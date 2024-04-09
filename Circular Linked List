@@ -47,6 +47,63 @@ else{
     curr->next=temp;
 }
 }
+void del_beg(node* &tail){
+node *temp=tail->next;
+//edgecase: if it has only one node
+if(temp==tail){
+    free(temp);
+    temp=NULL;
+}
+else{
+    tail->next=temp->next;
+    free(temp);
+    temp=NULL;
+}
+}
+void del_end(node* &tail){
+node *temp=tail->next;
+while(temp->next!=tail){
+    temp=temp->next;
+}
+//edgecase: if it has only one node
+if(temp==tail){
+    free(temp);
+    temp=NULL;
+}
+else{
+temp->next=tail->next;
+free(tail);
+tail=temp;
+}
+}
+void del_position(node* &tail,int pos){
+node *temp=tail->next;
+int position=1;
+while(position<pos-1){
+    temp=temp->next;
+    position++;
+}
+//edgecase: node position in 1
+if(position==pos){
+   del_beg(tail);
+    return;
+}
+//edgecase: if it has only one node
+else if(temp==tail){
+    free(temp);
+    temp=NULL;
+    return;
+}
+else{
+    node *temp2=temp->next;
+    temp->next=temp2->next;
+    if(temp2==tail){
+        tail=temp;
+    }
+    free(temp2);
+    temp2=NULL;
+}
+}
 void print(node* &tail){
 node *temp=tail->next;
 do{
@@ -66,5 +123,12 @@ insert_at_end(tail,30);
 insert_at_end(tail,40);
 print(tail);
 insert_at_position(tail,3,50);
+print(tail);
+cout<<"After deletion:"<<endl;
+del_beg(tail);
+print(tail);
+del_end(tail);
+print(tail);
+del_position(tail,1);
 print(tail);
 }
