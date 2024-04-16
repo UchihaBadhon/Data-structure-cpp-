@@ -1,0 +1,124 @@
+//some code have been commented out due to using different method such as map method & floyd detection
+#include<iostream>
+#include<map>
+using namespace std;
+#define optimize() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+class node{
+    public:
+int data;
+node *next;
+node(int data){
+this->data=data;
+this->next=NULL;
+}
+};
+void insert_node(node* &head,node* &tail,int data){
+node *temp=new node(data);
+temp->next=NULL;
+node *temp2=head;
+if(head->next==NULL){
+    head->next=temp;
+    tail=head->next;
+
+    }
+    else{
+        while(temp2->next!=NULL){
+            temp2=temp2->next;
+        }
+        temp2->next=temp;
+        tail=temp2->next;
+    }
+
+}
+bool detectloop(node *head){
+map<node*,bool>visited;
+if(head==NULL){
+    return false;
+}
+node *temp=head;
+while(temp!=NULL){
+    if(visited[temp]==true){
+        return true;
+    }
+    visited[temp]=true;
+  temp=temp->next;
+}
+return false;
+}
+
+//floyd loop detection algorithm
+node* floyd(node *head){//use bool as return type
+if(head==NULL){
+    return NULL;//return false in case of determinining it has a loop or not
+}
+node *fast=head,*slow=head;
+while(fast!=NULL&&slow!=NULL){
+    fast=fast->next;
+    if(fast!=NULL){
+        fast=fast->next;
+    }
+    slow=slow->next;
+    if(fast==slow){
+            return slow;
+       // return true in case of determinining it has a loop or not
+    }
+}
+return NULL;// return false in case of determinining it has a loop or not
+}
+//detect the begining node of loop/cycle
+node* detect_loopNode(node *head){
+if(head==NULL){
+    return NULL;
+}
+node *intersection=floyd(head);
+node *slow=head;
+while(slow!=intersection){
+    slow=slow->next;
+    intersection=intersection->next;
+}
+return slow;
+}
+void print(node *head){
+    node *temp=head;
+while(temp!=NULL){
+    cout<<temp->data<<" ";
+    temp=temp->next;
+}
+cout<<endl;
+}
+int main(){
+
+node *newnode=new node(10);
+node *head=newnode;
+node *tail=newnode;
+insert_node(head,tail,20);
+insert_node(head,tail,30);
+insert_node(head,tail,40);
+insert_node(head,tail,50);
+insert_node(head,tail,60);
+tail->next=head->next;
+//print(head);
+//node *ans=find_mid(head);
+//cout<<ans->data<<endl;
+//reverse linked list in k group
+ //head=kreverse(head,2);
+//print(head);
+//bool val=detectloop(head);
+//cout<<val<<endl;
+//method-2
+//bool val=floyd(head);
+//cout<<val<<endl;
+node *temp=detect_loopNode(head);
+cout<<temp->data<<endl;
+//removing the loop
+node *lastnode=temp;
+while(lastnode->next!=temp){
+    lastnode=lastnode->next;
+}
+
+lastnode->next=NULL;
+bool val=detectloop(head);
+cout<<val<<endl;
+//printing the nodes after loop deletion
+print(head);
+}
